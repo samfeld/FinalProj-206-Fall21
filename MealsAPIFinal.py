@@ -3,6 +3,8 @@ import json
 import os
 import requests
 import unittest
+import random
+import matplotlib.pyplot as plt
 
 # Create Database
 def setUpDatabase(db_name):
@@ -18,11 +20,11 @@ def setUpIngredientsTable(data, cur, conn):
         ingredient = meal['strIngredient']
         if ingredient not in ingredient_lst:
             ingredient_lst.append(ingredient)
-    cur.execute("DROP TABLE IF EXISTS Ingredients")
-    cur.execute("CREATE TABLE Ingredients (id INTEGER PRIMARY KEY NOT NULL, Ingredient TEXT)")
+    #cur.execute("DROP TABLE IF EXISTS Ingredients")
+    cur.execute("CREATE TABLE IF NOT EXISTS Ingredients (id INTEGER PRIMARY KEY NOT NULL, Ingredient TEXT)")
     for i in range(len(ingredient_lst)):
     #for i in range(limit):
-        cur.execute("INSERT INTO Ingredients (id,Ingredient) VALUES (?,?)",(i ,ingredient_lst[i]))
+        cur.execute("INSERT OR IGNORE INTO Ingredients (id,Ingredient) VALUES (?,?)",(i ,ingredient_lst[i]))
     conn.commit()
 
 def find_meals(main_ingredient):
@@ -35,63 +37,100 @@ def find_meals(main_ingredient):
 
 
 def create_meals_tables(cur, conn):
-    count=0
-    #cur.execute("CREATE TABLE AS (SELECT Ingredient FROM Ingredients WHERE Ingredient={})".format(ingredient))
     cur.execute("CREATE TABLE IF NOT EXISTS Meals (key INTEGER PRIMARY KEY, Main_ingredient_id INTEGER, Meal TEXT UNIQUE)")
-    #cur.execute(f"CREATE TABLE {ingredient} (Main_ingredient_id INTEGER, Main_ingredient TEXT, Meal TEXT UNIQUE)")
-    lst_meals=[]
+    conn.commit()
+
+
+def update_meals_table(cur, conn):
+    ids_in_table=[]
+    cur.execute("SELECT COUNT(*) FROM Meals")
+    count_meals=int(cur.fetchone()[0])
+    #if count_meals>0:
+    #    for c in range(count_meals):
+     #       cur.execute("SELECT Main_ingredient_id FROM Meals WHERE key={}".format(c))
+      #      current_key=cur.fetchone()[0]
+            #ids_in_table.append(current_key)
+    key=1
+    cur.execute("SELECT COUNT(key) FROM MEALS")
+    last_key=cur.fetchone()[0]
     cur.execute("SELECT COUNT(*) FROM Ingredients")
     count_ingredients=int(cur.fetchone()[0])
-    for i in range(count_ingredients):
- #for i in range(25):
-        #cur.execute("SELECT Ingredient FROM Ingredients WHERE id={}".format(i))
-        #should I use line below instead?
-        cur.execute("SELECT Ingredient FROM Ingredients WHERE id={}".format(i))
-        ingredient=cur.fetchone()[0]
-        meal_data=find_meals(ingredient)
-        try:
-            #for meal in meal_data["meals"]:
-            for i in range(25):
-                meal_name=meal_data[i]['strMeal']
-                cur.execute("SELECT COUNT key FROM MEALS")
-                key=cur.fetchone()[0]+1
-                print(key)
-                cur.execute("INSERT OR IGNORE INTO Meals (key, Main_ingredient_id, Meal) VALUES (?,?,?) ", (key, i, meal_name))
-                key+=1
-                
-        except:
+    while key <26:
+        #25 - 26 - 27
+        target_id=random.randint(0, count_ingredients-1)
+        if target_id not in ids_in_table:
+            print(target_id)
+            cur.execute("SELECT Ingredient FROM Ingredients WHERE id={}".format(target_id))
+            ingredient=cur.fetchone()[0]
+            meal_data=find_meals(ingredient)
+            ids_in_table.append(target_id)
+            try: 
+                for meal in meal_data["meals"]:
+                    if key<26:
+                        if meal['strMeal']!=None:
+                #meal_name=meal_data["meals"][key]['strMeal']
+                            meal_name=meal['strMeal']
+                   # print(meal_name)
+                            cur.execute("INSERT INTO Meals (key, Main_ingredient_id, Meal) VALUES (?,?,?) ", (last_key+key, target_id, meal_name))
+                            conn.commit()
+                            key+=1
+                            print(key)
+                        else:
+                            continue
+                    else:
+                        break
+            except:
+                continue
+        else:
             continue
+            
+        #key+=len(meal_data)
     conn.commit()
-    count+=25
-def num_meals_for_ingredient(cur, conn, id):
-    cur.execute("SELECT COUNT(*) From Meals m JOIN Ingredients i ON m.Main_ingredient_id=i.id WHERE m.Main_ingredient_id='{id}'")
+        
+"""def num_meals_for_ingredient(cur, conn):
+    cur.execute("SELECT COUNT(*) From Meals")
+    num_ingredients_listed=cur.fetchone()[0]
+    count=0
+    #for x in range(count):
+    ingredients_meal_count=[]
+    while count<num_ingredients_listed:
+        cur.execute("SELECT Main_ingredient_id FROM Meals WHERE key={}".format(count))
+        current_id=cur.fetchone()[0]
+        print(current_id)
+        #cur.execute("SELECT Main_ingredient_id FROM Meals WHERE key={}".format(count))
+        cur.execute("SELECT i.Ingredient FROM Ingredients i JOIN Meals m ON m.Main_ingredient_id=i.id WHERE m.Main_Ingredient_id={}".format(current_id))
+        current_ingr=cur.fetchone()[0]
+        #cur.execute("SELECT i.id FROM Ingredients i JOIN Meals m ON m.Main_ingredient_id=i.id WHERE m.key={}".format(count))
+        #current_id=cur.fetchone()[0]
+        cur.execute("SELECT COUNT(*) FROM Meals WHERE Main_ingredient_id={}".format(current_id))
+        current_count=cur.fetchone()[0]
+        #for i in range(current_count):
+        tup=(current_ingr,current_count)
+        ingredients_meal_count.append(tup)
+        #current_id=cur.fetchone()[0]
+        #cur.execute("SELECT COUNT(*) From Meals m JOIN Ingredients i ON m.Main_ingredient_id=i.id WHERE m.Main_ingredient_id={}".format(current_id))
     #cur.execute("SELECT COUNT(*) From Meals m JOIN Ingredients i ON m.Main_ingredient_id=i.id WHERE m.Main_ingredient_id=0")
-    conn.commit()
-    count=cur.fetchone()[0]
+        conn.commit()
+        count+=current_count
     #print(count)
-    return count
+    return ingredients_meal_count"""
 
 def main():
     # SETUP DATABASE AND TABLE
     cur, conn = setUpDatabase('Meals2.db')
     lst_ingredients=requests.get("https://www.themealdb.com/api/json/v1/1/list.php?i=list").text
     ingredient_data=json.loads(lst_ingredients)
-    #print(ingredient_data)
-    limit=0
-    #for i in range(4):
-    #    limit+=25
     setUpIngredientsTable(ingredient_data, cur, conn)
-    create_meals_tables(cur, conn)
-    count_meals=[]
-    print(num_meals_for_ingredient(cur, conn, 5))
-    for i in range(len(ingredient_data["meals"])):
-        current_count=num_meals_for_ingredient(cur, conn, i)
-        tup=(ingredient_data["meals"][i]["strIngredient"], current_count)
-        count_meals.append(tup)
-    #print(count_meals)
-    sorted_by_count=sorted(count_meals, key=lambda x:x[1])
-    #print(sorted_by_count)
 
+    create_meals_tables(cur, conn)
+    update_meals_table(cur, conn)
+    """count_meals=num_meals_for_ingredient(cur, conn)
+    print(count_meals)
+    sorted_by_count=sorted(count_meals, key=lambda x:x[1], reverse=True)
+    print(sorted_by_count)
+    ingredient_most_meals=sorted_by_count[0][0]
+    print(ingredient_most_meals)
+    update_meals_table(cur, conn)"""
     
     
     
