@@ -5,6 +5,7 @@ import requests
 import unittest
 import random
 import matplotlib.pyplot as plt
+import csv
 
 # Create Database
 def setUpDatabase(db_name):
@@ -56,10 +57,9 @@ def update_meals_table(cur, conn):
     cur.execute("SELECT COUNT(*) FROM Ingredients")
     count_ingredients=int(cur.fetchone()[0])
     while key <26:
-        #25 - 26 - 27
         target_id=random.randint(0, count_ingredients-1)
         if target_id not in ids_in_table:
-            print(target_id)
+            #print(target_id)
             cur.execute("SELECT Ingredient FROM Ingredients WHERE id={}".format(target_id))
             ingredient=cur.fetchone()[0]
             meal_data=find_meals(ingredient)
@@ -70,11 +70,10 @@ def update_meals_table(cur, conn):
                         if meal['strMeal']!=None:
                 #meal_name=meal_data["meals"][key]['strMeal']
                             meal_name=meal['strMeal']
-                   # print(meal_name)
                             cur.execute("INSERT INTO Meals (key, Main_ingredient_id, Meal) VALUES (?,?,?) ", (last_key+key, target_id, meal_name))
                             conn.commit()
                             key+=1
-                            print(key)
+                            #print(key)
                         else:
                             continue
                     else:
@@ -84,13 +83,19 @@ def update_meals_table(cur, conn):
         else:
             continue
             
-        #key+=len(meal_data)
     conn.commit()
+
+"""def num_meals_for_ingredient(cur, conn, ingredient):
+    cur.execute("SELECT COUNT(Meal) FROM Meals m JOIN Ingredients i ON m.Main_ingredient_id=i.id WHERE i.Ingredient={}".format(ingredient))
+    current_count=cur.fetchone()[0]
+    conn.commit()
+    tup=(ingredient, current_count)
+    return tup"""
         
-"""def num_meals_for_ingredient(cur, conn):
+def num_meals_for_ingredient(cur, conn):
     cur.execute("SELECT COUNT(*) From Meals")
     num_ingredients_listed=cur.fetchone()[0]
-    count=0
+    count=1
     #for x in range(count):
     ingredients_meal_count=[]
     while count<num_ingredients_listed:
@@ -113,7 +118,15 @@ def update_meals_table(cur, conn):
         conn.commit()
         count+=current_count
     #print(count)
-    return ingredients_meal_count"""
+    return ingredients_meal_count
+
+def write_csv(tup, filename):
+    with open(filename, "w", newline="") as fileout:
+        header=["Ingredient with most meals","Ingredient with least meals"]
+        writer=csv.writer(fileout)
+        writer.writerow(header)
+        writer.writerow(tup)
+
 
 def main():
     # SETUP DATABASE AND TABLE
@@ -124,13 +137,35 @@ def main():
 
     create_meals_tables(cur, conn)
     update_meals_table(cur, conn)
-    """count_meals=num_meals_for_ingredient(cur, conn)
+    """cur.execute("SELECT COUNT(DISTINCT Main_ingredient_id) FROM Meals")
+    counts_meals=[]
+    num_of_ingredients_listed=cur.fetchone()[0]
+    i=1
+    while i<num_of_ingredients_listed:
+        cur.execute("SELECT Main_ingredient_id FROM Meals WHERE key={}".format(i))
+        id=cur.fetchone()[0]
+        cur.execute("SELECT COUNT(Meal) FROM Meals WHERE Main_ingredient_id={}".format(id))
+        increment_by=cur.fetchone()[0]
+        cur.execute("SELECT Ingredient FROM Ingredients WHERE id={}".format(id))
+        ingr=cur.fetchone()[0]
+        count_tup=num_meals_for_ingredient(cur, conn, ingr)
+        counts_meals.append(count_tup)
+        i+=increment_by
+    sorted_by_count=sorted(counts_meals, key=lambda x:x[1], reverse=True)
+    ingredient_most_meals=sorted_by_count[0][0]
+    print(ingredient_most_meals)"""
+
+    count_meals=num_meals_for_ingredient(cur, conn)
     print(count_meals)
     sorted_by_count=sorted(count_meals, key=lambda x:x[1], reverse=True)
     print(sorted_by_count)
     ingredient_most_meals=sorted_by_count[0][0]
+    sorted_least=sorted(count_meals, key=lambda x:x[1])
+    ingredient_least_meals=sorted_least[0][0]
     print(ingredient_most_meals)
-    update_meals_table(cur, conn)"""
+    update_meals_table(cur, conn)
+    calculations=(ingredient_most_meals, ingredient_least_meals)
+    write_csv(calculations, "Meals_Calcultions.txt")
     
     
     
