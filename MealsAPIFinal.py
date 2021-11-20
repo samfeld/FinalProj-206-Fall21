@@ -9,26 +9,40 @@ import csv
 
 # Create Database
 def setUpDatabase(db_name):
+    """
+    This function creates the database titled 'Meals2.db' that will be referenced.
+    It returns the connection to the database and the cursor.
+    """
     path = os.path.dirname(os.path.abspath(__file__))
     conn = sqlite3.connect(path+'/'+db_name)
     cur = conn.cursor()
     return cur, conn
 
 def setUpIngredientsTable(data, cur, conn):
+    """
+    This function creates the table Ingredients in the database.
+    The table has 2 columns: id and Ingredient. 
+    The id is autoincremented and the Ingredients are taken from
+    a list of all of the ingredients on the 'themealdb.com'. 
+    This function does not return anything 
+    """
     ingredient_lst = []
     for meal in data['meals']:
         id=meal["idIngredient"]
         ingredient = meal['strIngredient']
         if ingredient not in ingredient_lst:
             ingredient_lst.append(ingredient)
-    #cur.execute("DROP TABLE IF EXISTS Ingredients")
     cur.execute("CREATE TABLE IF NOT EXISTS Ingredients (id INTEGER PRIMARY KEY NOT NULL, Ingredient TEXT)")
     for i in range(len(ingredient_lst)):
-    #for i in range(limit):
         cur.execute("INSERT OR IGNORE INTO Ingredients (id,Ingredient) VALUES (?,?)",(i ,ingredient_lst[i]))
     conn.commit()
 
 def find_meals(main_ingredient):
+    """
+    This function takes a main ingredient (e.g Chicken, Avocado).
+    It the calls TheMealDB API to get meals whose main ingredient is the one provided.
+    It returns the value as a list of dictionaries with information about the meals 
+    """
     base_url="https://www.themealdb.com/api/json/v1/1/filter.php?i={}"
     request_url=base_url.format(main_ingredient)
     data=requests.get(request_url)
@@ -38,19 +52,24 @@ def find_meals(main_ingredient):
 
 
 def create_meals_tables(cur, conn):
+    """
+    This function creates the table Meals in the database.
+    It does not return anything. 
+    """
     cur.execute("CREATE TABLE IF NOT EXISTS Meals (key INTEGER PRIMARY KEY, Main_ingredient_id INTEGER, Meal TEXT UNIQUE)")
     conn.commit()
 
 
 def update_meals_table(cur, conn):
+    """
+    This function updates the Meals table.
+    It calls the find_meals function on each of the ingredients in the Ingredients table. 
+    It then adds the meals to the table with a specification of which main ingredient is used, with the Main_ingredient_id.
+    This function does not return anything.
+    """
     ids_in_table=[]
     cur.execute("SELECT COUNT(*) FROM Meals")
     count_meals=int(cur.fetchone()[0])
-    #if count_meals>0:
-    #    for c in range(count_meals):
-     #       cur.execute("SELECT Main_ingredient_id FROM Meals WHERE key={}".format(c))
-      #      current_key=cur.fetchone()[0]
-            #ids_in_table.append(current_key)
     key=1
     cur.execute("SELECT COUNT(key) FROM MEALS")
     last_key=cur.fetchone()[0]
@@ -85,14 +104,14 @@ def update_meals_table(cur, conn):
             
     conn.commit()
 
-"""def num_meals_for_ingredient(cur, conn, ingredient):
-    cur.execute("SELECT COUNT(Meal) FROM Meals m JOIN Ingredients i ON m.Main_ingredient_id=i.id WHERE i.Ingredient={}".format(ingredient))
-    current_count=cur.fetchone()[0]
-    conn.commit()
-    tup=(ingredient, current_count)
-    return tup"""
-        
+
 def num_meals_for_ingredient(cur, conn):
+    """
+    This function counts the number of meals each ingredient is the main ingredient for.
+    It returns a list of tuples, each of which contains the ingredient and the count of meals it is the main ingredient for.
+    This function calls on both tables Ingredients and Meals and joins them in order to retrieve this information.
+
+    """
     cur.execute("SELECT COUNT(*) From Meals")
     num_ingredients_listed=cur.fetchone()[0]
     count=1
@@ -109,18 +128,19 @@ def num_meals_for_ingredient(cur, conn):
         #current_id=cur.fetchone()[0]
         cur.execute("SELECT COUNT(*) FROM Meals WHERE Main_ingredient_id={}".format(current_id))
         current_count=cur.fetchone()[0]
-        #for i in range(current_count):
         tup=(current_ingr,current_count)
         ingredients_meal_count.append(tup)
-        #current_id=cur.fetchone()[0]
-        #cur.execute("SELECT COUNT(*) From Meals m JOIN Ingredients i ON m.Main_ingredient_id=i.id WHERE m.Main_ingredient_id={}".format(current_id))
-    #cur.execute("SELECT COUNT(*) From Meals m JOIN Ingredients i ON m.Main_ingredient_id=i.id WHERE m.Main_ingredient_id=0")
         conn.commit()
         count+=current_count
-    #print(count)
     return ingredients_meal_count
 
 def write_csv(tup, filename):
+    """
+    This function takes in a tuples (called tup, i.e. the
+    one that is returned by CALCULATION FUNCTION ADD HERE, 
+    writes the data to a csv file, and saves it to the passed filename.
+    This function does not return anything. 
+    """
     with open(filename, "w", newline="") as fileout:
         header=["Ingredient with most meals","Ingredient with least meals"]
         writer=csv.writer(fileout)
@@ -137,23 +157,7 @@ def main():
 
     create_meals_tables(cur, conn)
     update_meals_table(cur, conn)
-    """cur.execute("SELECT COUNT(DISTINCT Main_ingredient_id) FROM Meals")
-    counts_meals=[]
-    num_of_ingredients_listed=cur.fetchone()[0]
-    i=1
-    while i<num_of_ingredients_listed:
-        cur.execute("SELECT Main_ingredient_id FROM Meals WHERE key={}".format(i))
-        id=cur.fetchone()[0]
-        cur.execute("SELECT COUNT(Meal) FROM Meals WHERE Main_ingredient_id={}".format(id))
-        increment_by=cur.fetchone()[0]
-        cur.execute("SELECT Ingredient FROM Ingredients WHERE id={}".format(id))
-        ingr=cur.fetchone()[0]
-        count_tup=num_meals_for_ingredient(cur, conn, ingr)
-        counts_meals.append(count_tup)
-        i+=increment_by
-    sorted_by_count=sorted(counts_meals, key=lambda x:x[1], reverse=True)
-    ingredient_most_meals=sorted_by_count[0][0]
-    print(ingredient_most_meals)"""
+
 
     count_meals=num_meals_for_ingredient(cur, conn)
     print(count_meals)
@@ -167,9 +171,24 @@ def main():
     calculations=(ingredient_most_meals, ingredient_least_meals)
     write_csv(calculations, "Meals_Calcultions.txt")
     
+    #visualization below:
+    count_meals=num_meals_for_ingredient(cur, conn)
     
+    ingredients=[]
+    counts_of_meals=[]
+    for count in count_meals:
+        ingredients.append(count[0])
+        counts_of_meals.append(count[1])
     
-    
+    #colors = ['gold', 'yellowgreen', 'lightcoral', 'lightskyblue']
+    #explode = (0.1, 0, 0, 0)  # explode 1st slice
+ 
+# Plot
+    plt.pie(counts_of_meals, labels=ingredients, 
+        autopct='%1.1f%%', shadow=True, startangle=140)
+ 
+    plt.axis('equal')
+    plt.show()
 
 if __name__ == "__main__":
     main()
