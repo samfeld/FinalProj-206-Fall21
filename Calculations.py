@@ -40,7 +40,8 @@ def num_meals_for_ingredient(cur, conn):
 def write_csv(tup, filename):
     """
     This function takes in a tuples (called tup, i.e. the
-    one that is returned by CALCULATION FUNCTION ADD HERE, 
+    one that is returned after running the num_meals_for_ingredients() function
+    and then sorting the list to find the highest and lowest meal counts, 
     writes the data to a csv file, and saves it to the passed filename.
     This function does not return anything. 
     """
@@ -62,7 +63,7 @@ print(ingredient_most_meals)
 calculations=(ingredient_most_meals, ingredient_least_meals)
 write_csv(calculations, "Meals_Calcultions.txt")
     
-#visualization below:
+#The code below creates a visualization (pie chart) of the data, representing:
 count_meals=num_meals_for_ingredient(cur, conn)
     
 ingredients=[]
@@ -71,7 +72,6 @@ for count in count_meals:
     ingredients.append(count[0])
     counts_of_meals.append(count[1])
  
-# Plot
     plt.pie(counts_of_meals, labels=ingredients, 
         autopct='%1.1f%%', shadow=True, startangle=140)
  
