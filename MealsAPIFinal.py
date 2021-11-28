@@ -137,7 +137,8 @@ def num_meals_for_ingredient(cur, conn):
 def write_csv(tup, filename):
     """
     This function takes in a tuples (called tup, i.e. the
-    one that is returned by CALCULATION FUNCTION ADD HERE, 
+    one that is returned after running the num_meals_for_ingredients() function
+    and then sorting the list to find the highest and lowest meal counts, 
     writes the data to a csv file, and saves it to the passed filename.
     This function does not return anything. 
     """
@@ -149,7 +150,10 @@ def write_csv(tup, filename):
 
 
 def main():
-    # SETUP DATABASE AND TABLE
+    """
+    This function first sets up the database, which is named Meals2.db.
+    It then created the Ingredients table, accessing the Meals DB API.
+    """
     cur, conn = setUpDatabase('Meals2.db')
     lst_ingredients=requests.get("https://www.themealdb.com/api/json/v1/1/list.php?i=list").text
     ingredient_data=json.loads(lst_ingredients)
