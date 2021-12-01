@@ -126,7 +126,6 @@ def num_meals_for_ingredient(cur, conn):
     while count<num_ingredients_listed:
         cur.execute("SELECT Main_ingredient_id FROM Meals WHERE key={}".format(count))
         current_id=cur.fetchone()[0]
-        print(current_id)
         #cur.execute("SELECT Main_ingredient_id FROM Meals WHERE key={}".format(count))
         cur.execute("SELECT i.Ingredient FROM Ingredients i JOIN Meals m ON m.Main_ingredient_id=i.id WHERE m.Main_Ingredient_id={}".format(current_id))
         current_ingr=cur.fetchone()[0]
@@ -140,7 +139,23 @@ def num_meals_for_ingredient(cur, conn):
         count+=current_count
     return ingredients_meal_count
 
-def write_csv(tup, filename):
+def top_ten(lst_tups):
+    lst_tups=sorted(lst_tups, key=lambda x: x[1], reverse=True)
+    if len(lst_tups)>=10:
+        lst_top_10=lst_tups[0:10]
+    else:
+        lst_top_10=lst_tups
+    """top_10_ingredients=[]
+    top_10_counts=[]
+    for tup in lst_tups:
+        top_10_counts.append(tup[1])
+        top_10_ingredients.append(tup[0])
+        top_ten_data=(top_10_ingredients, top_10_counts)
+        lst_top_10.append(top_ten_data)"""
+    print(lst_top_10)
+    return lst_top_10
+
+def write_csv(tup, top_10, filename):
     """
     This function takes in a tuples (called tup, i.e. the
     one that is returned after running the num_meals_for_ingredients() function
@@ -149,10 +164,21 @@ def write_csv(tup, filename):
     This function does not return anything. 
     """
     with open(filename, "w", newline="") as fileout:
-        header=["Ingredient with most meals","Ingredient with least meals"]
         writer=csv.writer(fileout)
-        writer.writerow(header)
+        title=["Calculations from The Meals DB API"]
+        writer.writerow(title)
+        header1=["Ingredient with most meals","Ingredient with least meals"]
+        writer.writerow(header1)
         writer.writerow(tup)
+        writer.writerow("")
+        header2=["Top 10 Main Ingredients Based Off Of Counts Of Meals:"]
+        writer.writerow(header2)
+        header3=["Ingredient", "Count of Meals With That Main Ingredient"]
+        writer.writerow(header3)
+        for tup in top_10:
+            data=tup[0],tup[1]
+            print(data)
+            writer.writerow(data)
 
 
 def main():
@@ -172,14 +198,14 @@ def main():
     count_meals=num_meals_for_ingredient(cur, conn)
     sorted_by_count=sorted(count_meals, key=lambda x:x[1], reverse=True)
     #print(sorted_by_count)
-    print(len(sorted_by_count))
     ingredient_most_meals=sorted_by_count[0][0]
     sorted_least=sorted(count_meals, key=lambda x:x[1])
     ingredient_least_meals=sorted_least[0][0]
     #print(ingredient_most_meals)
     update_meals_table(cur, conn)
     calculations=(ingredient_most_meals, ingredient_least_meals)
-    write_csv(calculations, "Meals_Calcultions.txt")
+    calculated_top=top_ten(count_meals)
+    write_csv(calculations, calculated_top, "Meals_Calcultions.txt")
     
     #visualization below:
     #count_meals=num_meals_for_ingredient(cur, conn)
