@@ -171,41 +171,43 @@ def main():
 
     count_meals=num_meals_for_ingredient(cur, conn)
     sorted_by_count=sorted(count_meals, key=lambda x:x[1], reverse=True)
-    print(sorted_by_count)
+    #print(sorted_by_count)
+    print(len(sorted_by_count))
     ingredient_most_meals=sorted_by_count[0][0]
     sorted_least=sorted(count_meals, key=lambda x:x[1])
     ingredient_least_meals=sorted_least[0][0]
-    print(ingredient_most_meals)
+    #print(ingredient_most_meals)
     update_meals_table(cur, conn)
     calculations=(ingredient_most_meals, ingredient_least_meals)
     write_csv(calculations, "Meals_Calcultions.txt")
     
     #visualization below:
-    count_meals=num_meals_for_ingredient(cur, conn)
+    #count_meals=num_meals_for_ingredient(cur, conn)
     
     ingredients=[]
     counts_of_meals=[]
-    for count in count_meals:
+    for count in sorted_by_count:
         ingredients.append(count[0])
         counts_of_meals.append(count[1])
 
  
 # The code below creates a Pie Chart of the ingredients and their meal counts.
 #
-    patches, labels, pct_texts=plt.pie(counts_of_meals, labels=ingredients, 
+    patches, labels, pct_texts=plt.pie(counts_of_meals[0:10], labels=ingredients[0:10], 
         autopct='%1.1f%%', shadow=False, rotatelabels=True, startangle=140)
     for label, pct_text in zip(labels, pct_texts):
         pct_text.set_rotation(label.get_rotation())
     #sort_legend=True
     #if sort_legend:
-    #    patches, labels, dummy=zip(*sorted(zip(patches, labels, counts_of_meals), 
+    ##    patches, labels, dummy=zip(*sorted(zip(patches, labels, counts_of_meals), 
     #    key=lambda x: x[2],
-     #   reverse=True))
+    #    reverse=True))
     
-    #labels = ['%s, %1.1f %%' % (l, s) for l, s in zip(ingredients, counts_of_meals)] 
+    #labels = ['%s, %1.1f ' % (l, s) for l, s in zip(ingredients,counts_of_meals)] 
     plt.axis('equal')
-    plt.title("Counts of Meals for Ingredients", loc="right")
-    plt.legend(ingredients, loc="lower left", fontsize=8)
+    plt.title("Top 10 Main Ingredients For Meals", loc="right")
+    #plt.legend(labels, loc="lower left", fontsize=8)
+    #plt.legend(ingredients, loc="lower left", fontsize=8)
     plt.tight_layout()
     plt.show()
     #add title
