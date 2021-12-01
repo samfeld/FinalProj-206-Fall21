@@ -1,2 +1,2 @@
 Ingredient with most meals,Ingredient with least meals
-Cinnamon,Ackee
+Butter,Apple Cider Vinegar
