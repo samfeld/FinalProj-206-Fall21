@@ -193,7 +193,8 @@ def main():
  
 # The code below creates a Pie Chart of the ingredients and their meal counts.
 #
-    patches, labels, pct_texts=plt.pie(counts_of_meals[0:10], labels=ingredients[0:10], 
+    colors=["magenta", "cyan", "orange", "yellow", "violet", "red", "yellowgreen", "blue", "gold", "lightskyblue"]
+    patches, labels, pct_texts=plt.pie(counts_of_meals[0:10], labels=ingredients[0:10], colors=colors,
         autopct='%1.1f%%', shadow=False, rotatelabels=True, startangle=140)
     for label, pct_text in zip(labels, pct_texts):
         pct_text.set_rotation(label.get_rotation())
