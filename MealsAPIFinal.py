@@ -21,7 +21,8 @@ def setUpDatabase(db_name):
 def setUpIngredientsTable(data, cur, conn):
     """
     This function creates the table Ingredients in the database.
-    It takes in cur and conn. 
+    It takes in 3 arguments: data (such as the ingredients list retrieved from the API),
+    the database cursor, and database connection object.  
     The table has 2 columns: id and Ingredient. 
     The id is autoincremented and the Ingredients are taken from
     a list of all of the ingredients on the 'themealdb.com'. 
@@ -55,6 +56,7 @@ def find_meals(main_ingredient):
 def create_meals_tables(cur, conn):
     """
     This function creates the table Meals in the database.
+    It takes in 2 arguments: the database cursor, and database connection object.
     It does not return anything. 
     """
     cur.execute("CREATE TABLE IF NOT EXISTS Meals (key INTEGER PRIMARY KEY, Main_ingredient_id INTEGER, Meal TEXT UNIQUE)")
@@ -63,10 +65,11 @@ def create_meals_tables(cur, conn):
 
 def update_meals_table(cur, conn):
     """
-    This function updates the Meals table. It takes in cur and conn.
+    This function updates the Meals table. It takes in 2 arguments: 
+    the database cursor, and database connection object.
     It calls the find_meals function on each of the ingredients in the Ingredients table. 
-    It then adds the meals to the table with a specification of which main ingredient is used, with the Main_ingredient_id.
-    This function does not return anything.
+    It then adds the meals to the table with a specification of which main ingredient is used, 
+    with the Main_ingredient_id. This function does not return anything.
     """
     ids_in_table=[]
     cur.execute("SELECT COUNT(*) FROM Meals")
@@ -108,7 +111,8 @@ def update_meals_table(cur, conn):
 
 def num_meals_for_ingredient(cur, conn):
     """
-    This function takes in cur and conn.
+    This function takes in two arguments:
+    the database cursor, and database connection object.
     It then counts the number of meals each ingredient is the main ingredient for.
     It returns a list of tuples, each of which contains the ingredient and the count of meals it is the main ingredient for.
     This function calls on both tables Ingredients and Meals and joins them in order to retrieve this information.
@@ -186,7 +190,7 @@ def main():
         counts_of_meals.append(count[1])
 
  
-# Plot
+# The code below creates a Pie Chart of the ingredients and their meal counts.
 #
     patches, labels, pct_texts=plt.pie(counts_of_meals, labels=ingredients, 
         autopct='%1.1f%%', shadow=False, rotatelabels=True, startangle=140)
