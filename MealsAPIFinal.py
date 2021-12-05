@@ -140,27 +140,34 @@ def num_meals_for_ingredient(cur, conn):
     return ingredients_meal_count
 
 def top_ten(lst_tups):
+    """
+    This function takes in a list of tuples (called lst_tups, i.e. the
+    one that is returned after running the num_meals_for_ingredients() function).
+    The function then sorts this list.
+    It returns the 10 Ingredients with the most meals.
+    If there are 10 or more meals in the database, it will return the top 10.
+    Otherwise (if, for example, 25 meals are added to the database but many share 
+    the same main ingredient and therefore 10 have not been added yet), the function
+    will return the ingredients that are currently in the database. """
     lst_tups=sorted(lst_tups, key=lambda x: x[1], reverse=True)
     if len(lst_tups)>=10:
         lst_top_10=lst_tups[0:10]
     else:
         lst_top_10=lst_tups
-    """top_10_ingredients=[]
-    top_10_counts=[]
-    for tup in lst_tups:
-        top_10_counts.append(tup[1])
-        top_10_ingredients.append(tup[0])
-        top_ten_data=(top_10_ingredients, top_10_counts)
-        lst_top_10.append(top_ten_data)"""
     print(lst_top_10)
     return lst_top_10
 
 def write_csv(tup, top_10, filename):
     """
-    This function takes in a tuples (called tup, i.e. the
-    one that is returned after running the num_meals_for_ingredients() function
-    and then sorting the list to find the highest and lowest meal counts, 
-    writes the data to a csv file, and saves it to the passed filename.
+    This function takes in a tuple, a list tuples, and a filename.
+    The tuple should contain the ingredient with the most meals, followed by the
+    ingredient with the least. The list of tuples is called top_10 (i.e. the
+    one that is returned after running the lst_top_10() function) contains the 
+    10 Ingredients with the highest number of meals. 
+    The function first writes a title for the file.
+    It then writes the tuple of the ingredients with the highest and lowest counts of meals.
+    Finally, it writes the Top 10 Ingredients along with their counts of meals. 
+    This data is all written to a csv file, and saves it to the passed filename.
     This function does not return anything. 
     """
     with open(filename, "w", newline="") as fileout:
