@@ -193,7 +193,7 @@ def main():
     This function first sets up the database, which is named Meals2.db.
     It then created the Ingredients table, accessing the Meals DB API.
     """
-    cur, conn = setUpDatabase('Meals2.db')
+    cur, conn = setUpDatabase('college_cooks.db')
     lst_ingredients=requests.get("https://www.themealdb.com/api/json/v1/1/list.php?i=list").text
     ingredient_data=json.loads(lst_ingredients)
     setUpIngredientsTable(ingredient_data, cur, conn)
