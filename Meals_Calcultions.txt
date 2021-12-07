@@ -1,16 +1,16 @@
 Calculations from The Meals DB API
 Ingredient with most meals,Ingredient with least meals
-Egg Yolks,Worcestershire Sauce
+Paprika,Chilled Butter
 
 Top 10 Main Ingredients Based Off Of Counts Of Meals:
 Ingredient,Count of Meals With That Main Ingredient
-Egg Yolks,13
-Sugar,7
-Chickpeas,6
-Peas,5
-Brandy,5
-Olive Oil,5
-Kale,5
-Greek Yogurt,5
-Vegetable Stock,5
-Soy Sauce,4
+Paprika,15
+Orange,8
+Pork,7
+Cherry Tomatoes,6
+Tamarind Paste,4
+Swede,3
+Unsalted Butter,3
+Nutmeg,3
+Sunflower Oil,3
+Smoked Paprika,2
