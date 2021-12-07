@@ -1,0 +1,34 @@
+The Average Prices of Dishes Featured in the NYPL Menus API:
+The average price of Pinot Grigio, Peter Zemmer 1997 (Alto Adige) is 29.0.
+The average price of Pinot Grigio, J. Tiefenbrunner 1996 DOC (Trentino) is 28.0.
+The average price of VEAL CHOP red peppers & rosemary potatoes is 25.75.
+The average price of GRILLED LARGE SHRIMP with vegetable risotto is 24.95.
+The average price of GRILLED ATLANTIC SALMON grilled summer vegetables is 22.75.
+The average price of VEAL MARSALA portobellini mushrooms and rosemary potatoes is 22.5.
+The average price of ASSORTED ITALIAN SAUSAGES & POLENTA tomato & parmigiano gratine is 18.95.
+The average price of TORTELLONI chicken & porcini filled, marscapone & truffle sauce is 17.95.
+The average price of GNOCCHI CON FEGATINI DI POLLO chicken livers is 17.75.
+The average price of FETTUCINE AL FRESCO Bucheron goat cheese, fresh tomato & basil is 16.95.
+The average price of CALABRIA PEPPERONI mozzarella & tomatoes is 16.5.
+The average price of MARGHERITA tomatoes, mozzarella & basil is 15.75.
+The average price of MUSSELS TOSCANE fresh tomatoes is 12.5.
+The average price of FRIED ARTICHOKES ALLA GIUDEA is 9.5.
+The average price of Cabernet, Pedroncelli is 7.95.
+The average price of Chardonnay, Glass Mountain is 7.95.
+The average price of Merlot, Madame Costeau is 7.95.
+The average price of Zinfandel, Rabbit Ridge is 7.95.
+The average price of Vernaccia,Mormoraia is 7.75.
+The average price of Gavi di Gavi Barrique, La Guardia is 7.5.
+The average price of Montepulciano, Masciarelli is 6.5.
+The average price of ROASTED ROSEMARY POTATOES is 5.95.
+The average price of Guinea chicken saute, fresh mushrooms is 1.0.
+The average price of Spring chicken fricassee, family style is 0.9.
+The average price of Broiled pork tenderloin, fried parsnips is 0.7.
+The average price of Broiled sweetbreads, Infante is 0.7.
+The average price of Fried frogs' legs, sauce tartare  is 0.7.
+The average price of Roast baby lamb with mint sauce is 0.7.
+The average price of Broiled green bluefish, Julienne potatoes  is 0.65.
+The average price of Boiled Kennebec salmon, Magenta is 0.6.
+The average price of Broiled weakfish, pommes Duchesse is 0.6.
+The average price of Filet of flounder poached, Martinique is 0.6.
+The average price of Puree of white beans, croutons soufflee is 0.25.
