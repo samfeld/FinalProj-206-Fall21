@@ -1,16 +1,16 @@
 Calculations from The Meals DB API
 Ingredient with most meals,Ingredient with least meals
-Paprika,Chilled Butter
+Sour Cream,Brown Rice
 
 Top 10 Main Ingredients Based Off Of Counts Of Meals:
 Ingredient,Count of Meals With That Main Ingredient
-Paprika,15
-Orange,8
-Pork,7
-Cherry Tomatoes,6
-Tamarind Paste,4
-Swede,3
-Unsalted Butter,3
-Nutmeg,3
-Sunflower Oil,3
-Smoked Paprika,2
+Sour Cream,6
+Demerara Sugar,3
+Tuna,3
+Baking Powder,3
+Sauerkraut,2
+Ginger Cordial,2
+Lamb Shoulder,2
+White Chocolate Chips,2
+Brown Rice,1
+Paella Rice,1
