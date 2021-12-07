@@ -1,0 +1,12 @@
+The average cost of an American restaurant is 3.0 $'s.
+The average cost of an Italian restaurant is 2.67 $'s.
+The average cost of a Contemporary American restaurant is 3.25 $'s.
+The average cost of an Afghan restaurant is 2.0 $'s.
+The average cost of a French restaurant is 3.0 $'s.
+The average cost of a Southwest restaurant is 4.0 $'s.
+The average cost of a Contemporary French restaurant is 2.5 $'s.
+The average cost of a Tapas / Small Plates restaurant is 2.0 $'s.
+The average cost of a French American restaurant is 3.0 $'s.
+The average cost of a Seafood restaurant is 3.0 $'s.
+The average cost of a Winery restaurant is 2.0 $'s.
+The average cost of a Steakhouse restaurant is 4.0 $'s.
