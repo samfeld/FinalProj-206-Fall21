@@ -1,16 +1,15 @@
 Calculations from The Meals DB API
 Ingredient with most meals,Ingredient with least meals
-Sour Cream,Brown Rice
+Garlic Clove,Stir-fry Vegetables
 
 Top 10 Main Ingredients Based Off Of Counts Of Meals:
 Ingredient,Count of Meals With That Main Ingredient
-Sour Cream,6
-Demerara Sugar,3
-Tuna,3
-Baking Powder,3
-Sauerkraut,2
-Ginger Cordial,2
-Lamb Shoulder,2
-White Chocolate Chips,2
-Brown Rice,1
-Paella Rice,1
+Garlic Clove,12
+Banana,3
+Red Pepper Flakes,2
+Smoked Haddock,2
+Duck Legs,2
+Stir-fry Vegetables,1
+Baby Aubergine,1
+Chopped Parsley,1
+Bulgur Wheat,1
