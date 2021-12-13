@@ -465,12 +465,9 @@ def main():
 
     count_meals=num_meals_for_ingredient(cur, conn)
     sorted_by_count=sorted(count_meals, key=lambda x:x[1], reverse=True)
-    #print(sorted_by_count)
     ingredient_most_meals=sorted_by_count[0][0]
     sorted_least=sorted(count_meals, key=lambda x:x[1])
     ingredient_least_meals=sorted_least[0][0]
-    #print(ingredient_most_meals)
-    update_meals_table(cur, conn)
     calculations=(ingredient_most_meals, ingredient_least_meals)
     calculated_top=top_ten(count_meals)
     write_csv(calculations, calculated_top, "Meals_Calcultions.txt")
